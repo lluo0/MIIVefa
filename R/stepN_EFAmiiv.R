@@ -107,6 +107,7 @@ stepN_EFAmiiv <- function(data,
 
   #####NEED TO DOUBLE CHECK HERE######
   ###HOW TO BEST HANDLE THIS? RETURN THE MODEL FROM THE PREVIOUS STEP?
+  #kmg: I agree that's probably the best way to handle this, with a warning that this is the last identifiable model.
   if(class(fit)!='miive'){
     stop('Model is overidentified.')
   }
@@ -118,6 +119,7 @@ stepN_EFAmiiv <- function(data,
   newgoodvarlist <- Map(setdiff, varPerFac, newbadvarlist)
 
   ##if newgoodvar contains all variables in the data, then return the model after removing these badvars
+  #kmg: just a quick note on the documentation above: are badvars removed if alll vars are good vars? I didn't understand this.
   if(length(unique(unlist(newgoodvarlist))) == ncol(data)){
     modelpart <- list()
     for(n in 1:length(newgoodvarlist)){
