@@ -23,6 +23,8 @@ select_scalingind_stepN <- function(data,
   #if scaling indicator selection is order, just use the first variable as the scaling indicator.
   if(scalingCrit == 'order'){
     scalingindicator <- colnames(data)[1]
+  }else if(length(badvar_unlist)==1){
+    scalingindicator <- badvar_unlist #if only one badvar, then it'd be the sacling indicator
   }else{
 
     #badvar_unlist <- unique(unlist(badvar)) #because badvar is a list of badvars for each factor
