@@ -1,4 +1,4 @@
-#' @name select_scalingind_stepN
+#' @name stepN_EFAmiiv
 #' @title Exploratory Factor Analysis Using Model Implied Instrumental Variables.
 #' @description This function checks if a new factor is needed from the last step model, or if crossloadings should be checked.
 #' @usage
