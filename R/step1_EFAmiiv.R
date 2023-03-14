@@ -15,6 +15,8 @@
 #' \dontrun{
 #' myonefacefamiivobj <- step1_EFAmiiv(data = mydata, correlatedErrors = 'v3~~v4')
 #' }
+#' @keywords internal
+#' @noRd
 #' @export
 
 step1_EFAmiiv <- function(data,

@@ -15,6 +15,8 @@
 #' \dontrun{
 #' badvarfrommultifit <- getbadvar_multi(fit = mydata, varPerFac = myvarperfac)
 #' }
+#' @keywords internal
+#' @noRd
 #' @export
 
 getbadvar_multi <- function(fit,

@@ -13,6 +13,8 @@
 #' \dontrun{
 #' myproblematicvariables <- getsigsarganNnonsigloading(modellist = mymodellist, fitlist = myfitlist)
 #' }
+#' @keywords internal
+#' @noRd
 #' @export
 
 

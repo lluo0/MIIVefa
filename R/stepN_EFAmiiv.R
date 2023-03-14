@@ -15,6 +15,8 @@
 #' \dontrun{
 #' myefamiivobj_stepN <- stepN_EFAmiiv(data = mydata, stepPrev = crossloadcheckobj)
 #' }
+#' @keywords internal
+#' @noRd
 #' @export
 
 stepN_EFAmiiv <- function(data,

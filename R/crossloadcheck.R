@@ -15,6 +15,8 @@
 #' \dontrun{
 #' crossloadcheckobj <- crossloadcheck(data = mydata, stepPrev = step1)
 #' }
+#' @keywords internal
+#' @noRd
 #' @export
 
 

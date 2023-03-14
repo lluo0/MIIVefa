@@ -11,6 +11,8 @@
 #' \dontrun{
 #' mybadvar <- getbadvar(fit = mydata)
 #' }
+#' @keywords internal
+#' @noRd
 #' @export
 
 getbadvar <- function(fit,
