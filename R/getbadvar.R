@@ -1,4 +1,17 @@
-
+#' @name getbadvar
+#' @title Exploratory Factor Analysis Using Model Implied Instrumental Variables.
+#' @description This function extracts problematic variables from a model fit object.
+#' @usage
+#'  getbadvar(fit = '',
+#'                 sigLevel = .05)
+#' @param fit The fit object obtained from miive function from the MIIVsem package.
+#' @param sigLevel The significance level threshold, default is .05.
+#' @author Lan Luo
+#' @examples
+#' \dontrun{
+#' mybadvar <- getbadvar(fit = mydata)
+#' }
+#' @export
 
 getbadvar <- function(fit,
                       sigLevel=.05){

@@ -1,3 +1,21 @@
+#' @name select_scalingind_stepN
+#' @title Exploratory Factor Analysis Using Model Implied Instrumental Variables.
+#' @description This function selects the scaling indicator for a multi-factor model when creating a new factor.
+#' @usage
+#'select_scalingind_stepN(data='',
+#'                  sigLevel = .05,
+#'                  scalingCrit = "sargan+factorloading_R2",
+#'                  stepPrev = '')
+#' @param data The data matrix to be examined.
+#' @param sigLevel The significance level threshold, default is .05.
+#' @param scalingCrit The criterion used to select the scaling indicators, default is 'factorloading_R2.'
+#' @param stepPrev The output object from the last step from the function crossloadcheck.
+#' @author Lan Luo
+#' @examples
+#' \dontrun{
+#' myscalingindicator_stepN <- select_scalingind_stepN(data = mydata, stepPrev = crossloadcheckobj)
+#' }
+#' @export
 
 
 select_scalingind_stepN <- function(data,

@@ -1,3 +1,21 @@
+#' @name getsigsarganNnonsigloading
+#' @title Exploratory Factor Analysis Using Model Implied Instrumental Variables.
+#' @description This function extracts variables that have significant sargan statistics and/or non-significant factor loadings from a list of models.
+#' @usage
+#'getsigsarganNnonsigloading(modellist = '',
+#'                            fitlist = '',
+#'                            sigLevel = .05)
+#' @param modellist A list of models with the same variables that only differ by the scaling indicator.
+#' @param fitlist A list of miive fit objects based on the models in modellist.
+#' @param sigLevel The significance level threshold, default is .05.
+#' @author Lan Luo
+#' @examples
+#' \dontrun{
+#' myproblematicvariables <- getsigsarganNnonsigloading(modellist = mymodellist, fitlist = myfitlist)
+#' }
+#' @export
+
+
 ##get the VARIABLE NAME (COLUMN NAME) for significant sargans + non-significant factor loadings
 #for EACH variable as the scaling indicator
 #note that model and fit objetcs are lists, as each variable is iteratedly used as the scaling indicator

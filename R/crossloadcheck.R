@@ -1,12 +1,29 @@
+#' @name crossloadcheck
+#' @title Exploratory Factor Analysis Using Model Implied Instrumental Variables.
+#' @description This function checks for crossloadings when there are more than 2 problematic variables after creating a new factor.
+#' @usage
+#'  crossloadcheck(data = '',
+#'                 sigLevel = .05,
+#'                 scalingCrit = '',
+#'                 stepPrev = '')
+#' @param data The data matrix to be examined.
+#' @param sigLevel The significance level threshold, default is .05.
+#' @param scalingCrit The criterion used to select the scaling indicators, default is 'factorloading_R2.'
+#' @param stepPrev The output object from the last step from the function stepN_EFAmiiv.
+#' @author Lan Luo
+#' @examples
+#' \dontrun{
+#' crossloadcheckobj <- crossloadcheck(data = mydata, stepPrev = step1)
+#' }
+#' @export
 
-##check for crossload
+
 crossloadcheck <- function(data,
                            sigLevel,
                            scalingCrit,
                            stepPrev){
   #read in relevant objetcs
   newgoodvarlist <- stepPrev$varPerFac
-  #newbadvarlist <- stepPrev$badvarlist
   badvar <- stepPrev$badvar
   correlatedErrors <- stepPrev$correlatedErrors
 
@@ -17,7 +34,6 @@ crossloadcheck <- function(data,
   crossloadmodelpart <- varPerFac <- list()
   num_factor <- length(newgoodvarlist)
   for(n in 1:length(newgoodvarlist)){
-    #varPerFac[[n]] <- c(newgoodvarlist[[n]], unique(unlist(newbadvarlist)))
     varPerFac[[n]] <- c(newgoodvarlist[[n]], badvar)
     crossloadmodelpart[[n]] <- paste0('f', n, '=~', paste0(varPerFac[[n]], collapse = '+'))
   }
@@ -26,8 +42,6 @@ crossloadcheck <- function(data,
   if(!is.null(correlatedErrors)){
     crossloadmodel <- paste0(crossloadmodel, '\n', correlatedErrors)
   }
-
-  #crossfit <- miive(model = crossloadmodel, data = data, var.cov = T)
 
   ##catch error when model is underidentified!
   crossfit <- tryCatch( miive(model = crossloadmodel, data = data, var.cov = T),
@@ -51,7 +65,6 @@ crossloadcheck <- function(data,
 
 
     ##if still have ALL the old badvar on the latest factor: no crossloading and move on to next step
-    #if(newbadvarlist[[length(newbadvarlist)]] == crossbadvarlist[[length(crossbadvarlist)]]){
     if(identical(badvar,crossbadvarlist[[length(crossbadvarlist)]]) & length(badvar)!=1){
       varPerFac <- stepPrev$varPerFac
       #badvarlist <- newbadvarlist
@@ -119,35 +132,7 @@ crossloadcheck <- function(data,
         fit_temp <- miive(model = model_temp, data, var.cov = T)
         model <- model_temp
         fit <- fit_temp
-        # #check if need to get rid of this one crossload!!
-        # if(length(unique(unlist(crossbadvarlist)))==1){
-        #   modelpart_temp <- Map(c, newgoodvarlist,
-        #                         lapply(crossbadvarlist, function(x) setdiff(badvar, x)))
-        #   #lapply(crossbadvarlist, function(x) setdiff(unique(unlist(newbadvarlist)), x)))
-        #
-        #   model_temp <- list()
-        #   for(n in 1:length(modelpart_temp)){
-        #     model_temp[[n]] <- paste0('f', n, '=~', paste0(modelpart_temp[[n]], collapse = '+'))
-        #   }
-        #   model_temp <- paste0(model_temp, collapse  = '\n')
-        #   if(!is.null(correlatedErrors)){
-        #     model_temp <- paste0(model_temp, '\n', correlatedErrors)
-        #   }
-        #   fit_temp <- miive(model = model_temp, data, var.cov = T)
-        #   badvar_temp <- getbadvar_multi(fit_temp, sigLevel, num_factor = num_factor, modelpart_temp)
-        #   if(!length(unique(unlist(badvar_temp)))>2){
-        #     #if this badvar disappeared OR still a badvar, we retain this uncrossloaded model for this variablebecause of parsimony.
-        #     model <- model_temp
-        #     fit <- fit_temp
-        #   }else{
-        #     model <- crossloadmodel
-        #     fit <- crossfit
-        #   }
-        #
-        # }else{
-        #   model <- crossloadmodel
-        #   fit <- crossfit
-        # }
+
       }
     }
 
@@ -163,34 +148,6 @@ crossloadcheck <- function(data,
                        nextstep = 'no')
     }
 
-    ##if some more new badvar and some old bad var disappear: ?? what should we do?
-
-    # ##if no new badvar and some old badvar disappear:
-    # if(length(newbadvaraftercrossload)== 0){
-    #   ##if number of current badvar > 1: move on to next step aka create new factor
-    #   if(length(badvar_unlist[!badvar_unlist %in% badvarturnedgoodaftercrossload])>1){
-    #     #update goodvar and badvar list
-    #     varPerFac <- Map(c, newgoodvarlist,
-    #                           Map(setdiff, newbadvarlist, crossbadvarlist)) ##this is updating goodvar for each factor
-    #
-    #     badvarlist <- crossbadvarlist
-    #     # newbadvarlist <- Map(c, Map(setdiff, newbadvarlist, #first delete old variables that turn good after crossloading
-    #     #                      Map(setdiff, newbadvarlist, crossbadvarlist)),
-    #     #                      Map(setdiff, crossbadvarlist, newbadvarlist)) #then add new badvars that appeared after crossloading
-    #
-    #     num_factor <- length(varPerFac)
-    #     nextstep <- 'yes'
-    #     correlatedErrors <- correlatedErrors
-    #     num_badvar <- length(unique(unlist(badvarlist)))
-    #
-    #
-    #
-    #   }else{##if <=1, retain this crossload model and nextstep=no
-    #     model <- crossloadmodel
-    #     fit <- crossfit
-    #     nextstep <- 'no'
-    #   }
-    # }
 
   }
 

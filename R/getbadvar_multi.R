@@ -1,3 +1,22 @@
+#' @name getbadvar_multi
+#' @title Exploratory Factor Analysis Using Model Implied Instrumental Variables.
+#' @description This function extracts problematic variables from a multi-factor model fit object by factor.
+#' @usage
+#'  getbadvar_multi(fit = '',
+#'                 sigLevel = .05,
+#'                 num_factor = '',
+#'                 varPerFac = '')
+#' @param fit The fit object obtained from miive function from the MIIVsem package.
+#' @param sigLevel The significance level threshold, default is .05.
+#' @param num_factor The number of factors, default is 1.
+#' @param varPerFac It is a list storing the current variables on each factor.
+#' @author Lan Luo
+#' @examples
+#' \dontrun{
+#' badvarfrommultifit <- getbadvar_multi(fit = mydata, varPerFac = myvarperfac)
+#' }
+#' @export
+
 getbadvar_multi <- function(fit,
                                 sigLevel = .05,
                                 num_factor = 1,

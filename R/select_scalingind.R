@@ -1,3 +1,21 @@
+#' @name select_scalingind
+#' @title Exploratory Factor Analysis Using Model Implied Instrumental Variables.
+#' @description This function selects the scaling indicator for a one factor model.
+#' @usage
+#'select_scalingind(data='',
+#'                  sigLevel = .05,
+#'                  scalingCrit = "sargan+factorloading_R2",
+#'                  correlatedErrors = NULL = '')
+#' @param data The data matrix.
+#' @param sigLevel The significance level threshold, default is .05.
+#' @param scalingCrit The criterion used to select the scaling indicators, default is 'factorloading_R2.'
+#' @param correlatedErrors The pairs of variables whose errors should be correlated in the model search procedure, default is NULL.
+#' @author Lan Luo
+#' @examples
+#' \dontrun{
+#' myscalingindicator <- select_scalingind(data = mydata, correlatedErrors = 'v3~~v4')
+#' }
+#' @export
 
 
 #########scaling indicator selection########

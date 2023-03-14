@@ -1,3 +1,17 @@
+#' @name r2_order
+#' @title Exploratory Factor Analysis Using Model Implied Instrumental Variables.
+#' @description This function calculates the R2 values for each variable in the data when the rest variables are regressed on it.
+#' @usage
+#'r2_order(data = '')
+#' @param data The data matrix.
+#' @author Lan Luo
+#' @examples
+#' \dontrun{
+#' r2values <- r2_order(data = mydata)
+#' }
+#' @export
+
+
 r2_order <- function(data){
   ##check the r2 for each variable as regressing all other variables on it
   #and use the highest r2 as the initial scaling indicator
