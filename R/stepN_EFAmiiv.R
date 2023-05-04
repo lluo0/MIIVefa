@@ -8,7 +8,7 @@
 #'                  stepPrev = '')
 #' @param data The data matrix to be examined.
 #' @param sigLevel The significance level threshold, default is .05.
-#' @param scalingCrit The criterion used to select the scaling indicators, default is 'factorloading_R2.'
+#' @param scalingCrit The criterion used to select the scaling indicators, default is 'sargan+factorloading_R2.'
 #' @param stepPrev The output object from the last step from the function crossloadcheck.
 #' @author Lan Luo
 #' @examples
@@ -67,37 +67,51 @@ stepN_EFAmiiv <- function(data,
   #####NEED TO DOUBLE CHECK HERE######
   ###HOW TO BEST HANDLE THIS? RETURN THE MODEL FROM THE PREVIOUS STEP?
   if(class(fit)!='miive'){
-    stop('Model is overidentified.')
-  }
+    #stop('Model is overidentified.')
 
-  ##then get new badvars after creating the new factor
-  newbadvarlist <- getbadvar_multi(fit, sigLevel, num_factor = num_factor_new, varPerFac)
-
-  ##and new goodvar list
-  newgoodvarlist <- Map(setdiff, varPerFac, newbadvarlist)
-
-  ##if newgoodvar contains all variables in the data, then return the model after removing these badvars
-  if(length(unique(unlist(newgoodvarlist))) == ncol(data)){
+    #if model is overidentified, then retain all badvars on the last factor and stops here.
     modelpart <- list()
-    for(n in 1:length(newgoodvarlist)){
-      modelpart[[n]] <- paste0('f', n, '=~', paste0(newgoodvarlist[[n]], collapse = '+'))
+    for(n in 1:length(stepPrev$varPerFac)){
+      modelpart[[n]] <- paste0('f', n, '=~', paste0(stepPrev$varPerFac[[n]], collapse = '+'))
     }
+    modelpart[[length(modelpart)]] <- paste0(modelpart[[length(modelpart)]], '+', paste0(stepPrev$badvar, collapse = '+'))
     model <- paste0(modelpart, collapse = '\n')
-    ##add in correlated errors when provided
-    if(!is.null(correlatedErrors)){
-      model <- paste0(model, '\n', correlatedErrors)
-    }
-    fit <- miive(model = model, data = data, var.cov = T)
+    fit <- miive(model, data, var.cov = T)
     finalobj <- list(model = model,
                      fit = fit,
                      nextstep = 'no')
   } else{
-    finalobj <- list(varPerFac = newgoodvarlist,
-                     #badvarlist = newbadvarlist,
-                     badvar = unique(unlist(newbadvarlist)),
-                     correlatedErrors = correlatedErrors,
-                     nextstep = 'yes')
+
+    ##then get new badvars after creating the new factor
+    newbadvarlist <- getbadvar_multi(fit, sigLevel, num_factor = num_factor_new, varPerFac)
+
+    ##and new goodvar list
+    newgoodvarlist <- Map(setdiff, varPerFac, newbadvarlist)
+
+    ##if newgoodvar contains all variables in the data, then return the model after removing these badvars
+    if(length(unique(unlist(newgoodvarlist))) == ncol(data)){
+      modelpart <- list()
+      for(n in 1:length(newgoodvarlist)){
+        modelpart[[n]] <- paste0('f', n, '=~', paste0(newgoodvarlist[[n]], collapse = '+'))
+      }
+      model <- paste0(modelpart, collapse = '\n')
+      ##add in correlated errors when provided
+      if(!is.null(correlatedErrors)){
+        model <- paste0(model, '\n', correlatedErrors)
+      }
+      fit <- miive(model = model, data = data, var.cov = T)
+      finalobj <- list(model = model,
+                       fit = fit,
+                       nextstep = 'no')
+    } else{
+      finalobj <- list(varPerFac = newgoodvarlist,
+                       #badvarlist = newbadvarlist,
+                       badvar = unique(unlist(newbadvarlist)),
+                       correlatedErrors = correlatedErrors,
+                       nextstep = 'yes')
+    }
   }
+
   return(finalobj)
 
 
