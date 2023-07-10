@@ -34,5 +34,7 @@ getbadvar <- function(fit,
   v_list_final <- unique(c(v_list_sigsargan, v_list_nonsigloading))
 
 
-  return(v_list_final)
+  return(list(badvar = v_list_final,
+              badsargan = v_list_sigsargan,
+              badloading = v_list_nonsigloading))
 }

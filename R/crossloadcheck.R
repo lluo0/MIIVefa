@@ -8,7 +8,7 @@
 #'                 stepPrev = '')
 #' @param data The data matrix to be examined.
 #' @param sigLevel The significance level threshold, default is .05.
-#' @param scalingCrit The criterion used to select the scaling indicators, default is 'factorloading_R2.'
+#' @param scalingCrit The criterion used to select the scaling indicators, default is 'sargan+factorloading_R2.'
 #' @param stepPrev The output object from the last step from the function stepN_EFAmiiv.
 #' @author Lan Luo
 #' @examples
@@ -21,8 +21,8 @@
 
 
 crossloadcheck <- function(data,
-                           sigLevel,
-                           scalingCrit,
+                           sigLevel =.05,
+                           scalingCrit = 'sargan+factorloading_R2',
                            stepPrev){
   #read in relevant objetcs
   newgoodvarlist <- stepPrev$varPerFac
@@ -53,57 +53,26 @@ crossloadcheck <- function(data,
     finalobj <- stepPrev
   } else {
     #get new badvars after crossloading
-    crossbadvarlist <- getbadvar_multi(crossfit, sigLevel, num_factor = num_factor, varPerFac)
-
+    allcrossbadvarlist <- getbadvar_multi(crossfit, sigLevel, num_factor = num_factor, varPerFac)
+    crossbadvarlist <- allcrossbadvarlist[[1]]
+    crossbadvarlist_sargan <- allcrossbadvarlist[[2]]
+    crossbadvarlist_loading <- allcrossbadvarlist[[3]]
 
     #
     crossbadvar_unlist <- unique(unlist(crossbadvarlist))
-    #badvar_unlist <- unique(unlist(newbadvarlist))
-    badvar_unlist <- badvar
-    ##new badvar after crossloading
-    newbadvaraftercrossload <- setdiff(crossbadvar_unlist, badvar_unlist)
-    ##old badvars that disappears after acrossloading
-    badvarturnedgoodaftercrossload <- setdiff(badvar_unlist, crossbadvar_unlist)
+    crossbadvarlist_sargan_unlist <- unique(unlist(crossbadvarlist_sargan))
+    crossbadvarlist_loading_unlist <- unique(unlist(crossbadvarlist_loading))
+
+    #update goodvars (varperfac) and badvar
+    varPerFac <- Map(c, newgoodvarlist,
+                     lapply(crossbadvarlist, function(x) setdiff(badvar, x))) ##this is updating goodvar for each factor
 
 
-    ##if still have ALL the old badvar on the latest factor: no crossloading and move on to next step
-    if(identical(badvar,crossbadvarlist[[length(crossbadvarlist)]]) & length(badvar)!=1){
-      varPerFac <- stepPrev$varPerFac
-      #badvarlist <- newbadvarlist
-      #badvar <- unique(unlist(newbadvarlist))
-      badvar <- stepPrev$badvar
-      num_factor <- length(varPerFac)
-      nextstep <- 'yes'
-      correlatedErrors <- correlatedErrors
-    }else if(identical(badvar,crossbadvarlist[[length(crossbadvarlist)]]) & length(badvar)==1) { #only one badvar and didn't turn good
-      nextstep <- 'no'
-      varPerFac <- stepPrev$varPerFac
-      varPerFac[[length(varPerFac)]] <- c(varPerFac[[length(varPerFac)]], stepPrev$badvar)
-      #then create a model and fit
-      model_temp <- list()
-      for(n in 1:length(varPerFac)){
-        model_temp[[n]] <- paste0('f', n, '=~', paste0(varPerFac[[n]], collapse = '+'))
-      }
-      model_temp <- paste0(model_temp, collapse  = '\n')
-      if(!is.null(correlatedErrors)){
-        model_temp <- paste0(model_temp, '\n', correlatedErrors)
-      }
-      fit_temp <- miive(model = model_temp, data, var.cov = T)
-      model <- model_temp
-      fit <- fit_temp
-    }else{#if some more new badvar and some old bad var disappear
+    badvar <- setdiff(colnames(data),unique(unlist(varPerFac)))
 
-      #update goodvar and badvar list
-
-      varPerFac <- Map(c, newgoodvarlist,
-                       lapply(crossbadvarlist, function(x) setdiff(badvar, x))) ##this is updating goodvar for each factor
-
-
-      badvar <- setdiff(colnames(data),unique(unlist(varPerFac)))
-
-      ##if new badvar after cleaning up unnecessary crossloading is 1, no need to move on to the next step but just load it on the last factor
-      if(length(badvar)==1){
-        nextstep <- 'no'
+    ##if only one badvar now, re-estimate loading it just on the latest factor
+    if(length(badvar)==1){
+      if(sum(sapply(crossbadvarlist_sargan, function(x) badvar %in% x)) > sum(sapply(crossbadvarlist_loading, function(x) badvar %in% x))){
         varPerFac[[length(varPerFac)]] <- c(varPerFac[[length(varPerFac)]], badvar)
         model_temp <- list()
         for(n in 1:length(varPerFac)){
@@ -116,28 +85,53 @@ crossloadcheck <- function(data,
         fit_temp <- miive(model = model_temp, data, var.cov = T)
         model <- model_temp
         fit <- fit_temp
-      }else if(length(badvar)>1){
-        num_factor <- length(varPerFac)
-        nextstep <- 'yes'
-        correlatedErrors <- correlatedErrors
-        num_badvar <- length(badvar)
-      } else{##if ==0, nextstep=no
         nextstep <- 'no'
-        model_temp <- list()
-        for(n in 1:length(varPerFac)){
-          model_temp[[n]] <- paste0('f', n, '=~', paste0(varPerFac[[n]], collapse = '+'))
-        }
-        model_temp <- paste0(model_temp, collapse  = '\n')
-        if(!is.null(correlatedErrors)){
-          model_temp <- paste0(model_temp, '\n', correlatedErrors)
-        }
-        fit_temp <- miive(model = model_temp, data, var.cov = T)
-        model <- model_temp
-        fit <- fit_temp
-
+      }else{
+        nextstep <- 'yes'
+        num_factor <- length(varPerFac)
+        correlatedErrors <- correlatedErrors
       }
-    }
+      # varPerFac[[length(varPerFac)]] <- c(varPerFac[[length(varPerFac)]], badvar)
+      # model_temp <- list()
+      # for(n in 1:length(varPerFac)){
+      #   model_temp[[n]] <- paste0('f', n, '=~', paste0(varPerFac[[n]], collapse = '+'))
+      # }
+      # model_temp <- paste0(model_temp, collapse  = '\n')
+      # if(!is.null(correlatedErrors)){
+      #   model_temp <- paste0(model_temp, '\n', correlatedErrors)
+      # }
+      # fit_temp <- miive(model = model_temp, data, var.cov = T)
+      #
+      # allcrossbadvarlist <- getbadvar_multi(crossfit, sigLevel, num_factor = num_factor, varPerFac)
+      # #if only have new badvar now and it is NOT because of non-significant loading
+      # if(length(unique(unlist(allcrossbadvarlist[[3]])))==0 & length(unique(unlist(allcrossbadvarlist[[1]])))==1){
+      #   model <- model_temp
+      #   fit <- fit_temp
+      #   nextstep <- 'no'
+      # }else{#still need next step
+      #   nextstep <- 'yes'
+      #   #and need to redo varperfac. but too much work
+      # }
+    }else if(length(badvar) > 1){#or, we need to clean up unnecessary crossloadings before moving on
 
+      num_factor <- length(varPerFac)
+      nextstep <- 'yes'
+      correlatedErrors <- correlatedErrors
+      num_badvar <- length(badvar)
+    } else{##if ==0, nextstep=no
+      nextstep <- 'no'
+      model_temp <- list()
+      for(n in 1:length(varPerFac)){
+        model_temp[[n]] <- paste0('f', n, '=~', paste0(varPerFac[[n]], collapse = '+'))
+      }
+      model_temp <- paste0(model_temp, collapse  = '\n')
+      if(!is.null(correlatedErrors)){
+        model_temp <- paste0(model_temp, '\n', correlatedErrors)
+      }
+      fit_temp <- miive(model = model_temp, data, var.cov = T)
+      model <- model_temp
+      fit <- fit_temp
+    }
     if(nextstep=='yes'){
       finalobj <- list(varPerFac = varPerFac,
                        badvar = badvar,
@@ -150,10 +144,10 @@ crossloadcheck <- function(data,
                        nextstep = 'no')
     }
 
-
   }
 
 
-  return(finalobj)
+
+return(finalobj)
 
 }

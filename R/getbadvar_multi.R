@@ -55,6 +55,9 @@ getbadvar_multi <- function(fit,
   newbadvar <- lapply(Map(c, newbadvar_loading, newbadvar_sargan), unique)
   # newbadvar <- lapply(newbadvar_loading, function(x)
   #   unique(c(x, newbadvar_sargan)))
-  return(newbadvar)
+  #return(newbadvar)
+  return(list(newbadvar = newbadvar,
+              newbadvar_sargan = newbadvar_sargan,
+              newbadvar_loading = newbadvar_loading))
 
 }

@@ -31,5 +31,5 @@ EFAmiiv <- function(data,
       temp <- crossloadcheck(data, sigLevel, scalingCrit, stepPrev = temp)
     }
   }
-  return(temp[1:2])
+  return(temp[1:(length(temp)-1)])
 }

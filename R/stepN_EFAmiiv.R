@@ -21,7 +21,7 @@
 
 stepN_EFAmiiv <- function(data,
                           sigLevel,
-                          scalingCrit,
+                          scalingCrit = 'sargan+factorloading_R2',
                           stepPrev){
 
   ##first read in relevant info from the last step
@@ -66,24 +66,28 @@ stepN_EFAmiiv <- function(data,
 
   #####NEED TO DOUBLE CHECK HERE######
   ###HOW TO BEST HANDLE THIS? RETURN THE MODEL FROM THE PREVIOUS STEP?
+  #simply print out the model but not MIIVsem estimate
   if(class(fit)!='miive'){
     #stop('Model is overidentified.')
 
     #if model is overidentified, then retain all badvars on the last factor and stops here.
-    modelpart <- list()
-    for(n in 1:length(stepPrev$varPerFac)){
-      modelpart[[n]] <- paste0('f', n, '=~', paste0(stepPrev$varPerFac[[n]], collapse = '+'))
-    }
-    modelpart[[length(modelpart)]] <- paste0(modelpart[[length(modelpart)]], '+', paste0(stepPrev$badvar, collapse = '+'))
-    model <- paste0(modelpart, collapse = '\n')
-    fit <- miive(model, data, var.cov = T)
+    # modelpart <- list()
+    # for(n in 1:length(stepPrev$varPerFac)){
+    #   modelpart[[n]] <- paste0('f', n, '=~', paste0(stepPrev$varPerFac[[n]], collapse = '+'))
+    # }
+    # modelpart[[length(modelpart)]] <- paste0(modelpart[[length(modelpart)]], '+', paste0(stepPrev$badvar, collapse = '+'))
+    # model <- paste0(modelpart, collapse = '\n')
+    # fit <- miive(model, data, var.cov = T)
+
+    cat('No latent variables found.')
+    cat('\n')
+    #warning('No latent variables found.')
     finalobj <- list(model = model,
-                     fit = fit,
                      nextstep = 'no')
   } else{
 
     ##then get new badvars after creating the new factor
-    newbadvarlist <- getbadvar_multi(fit, sigLevel, num_factor = num_factor_new, varPerFac)
+    newbadvarlist <- getbadvar_multi(fit, sigLevel, num_factor = num_factor_new, varPerFac)[[1]]
 
     ##and new goodvar list
     newgoodvarlist <- Map(setdiff, varPerFac, newbadvarlist)

@@ -8,7 +8,7 @@
 #'                  correlatedErrors = NULL = '')
 #' @param data The data matrix.
 #' @param sigLevel The significance level threshold, default is .05.
-#' @param scalingCrit The criterion used to select the scaling indicators, default is 'factorloading_R2.'
+#' @param scalingCrit The criterion used to select the scaling indicators, default is 'sargan+factorloading_R2.'
 #' @param correlatedErrors The pairs of variables whose errors should be correlated in the model search procedure, default is NULL.
 #' @author Lan Luo
 #' @examples
@@ -42,16 +42,38 @@ step1_EFAmiiv <- function(data,
 
   ##get variables with significant sargans/nonsignificant factor loadings
   ##variables with significant sargans/nonsignificant factor loadings are referred to as 'bad variables'
-  badvar <- getbadvar(fit, sigLevel)
+
+  allbadvar <- getbadvar(fit, sigLevel)
+  badvar <- allbadvar[[1]]
 
   ##retain this one factor model if no more than one bad variable
-  if(length(badvar) <=1){
+  if(length(badvar) ==0){
     finalobj <- list(model = model,
                      fit  = fit,
-                     num_factor = 1,
-                     num_badvar = length(badvar),
                      nextstep = 'no')
-  }else{ ##proceed to the next step when more than 1 bad variable present
+  }else if(length(badvar) ==1){ #if only one badvar
+    if(length(allbadvar[[2]])==1 & length(allbadvar[[3]])!=1){ #if only badvar has significant loading, still stop
+      finalobj <- list(model = model,
+                       fit  = fit,
+                       nextstep = 'no')
+    }else{
+      goodvarlist <- list()
+      goodvar <- setdiff(colnames(data), badvar)
+
+      goodvarlist[[1]] <- c(scalingindicator, goodvar[goodvar!=scalingindicator])
+
+      finalobj <- list(model = model,
+                       fit  = fit,
+                       num_factor = 1,
+                       num_badvar = length(badvar),
+                       varPerFac = goodvarlist,
+                       #badvarlist = badvarlist,
+                       badvar = badvar,
+                       #goodmodelpart = goodmodelpart,
+                       nextstep = 'yes',
+                       correlatedErrors = correlatedErrors)
+    }
+  } else{ ##proceed to the next step when more than 1 bad variable present
     goodvarlist <- list()
     goodvar <- setdiff(colnames(data), badvar)
     ##goodvar is a list because it will contain the 'good variables' for each potential factors
