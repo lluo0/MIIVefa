@@ -1,8 +1,8 @@
-#' @name stepN_EFAmiiv
+#' @name stepN_miivefa
 #' @title Exploratory Factor Analysis Using Model Implied Instrumental Variables.
 #' @description This function checks if a new factor is needed from the last step model, or if crossloadings should be checked.
 #' @usage
-#'stepN_EFAmiiv(data='',
+#'stepN_miivefa(data='',
 #'                  sigLevel = .05,
 #'                  scalingCrit = "sargan+factorloading_R2",
 #'                  stepPrev = '')
@@ -13,13 +13,13 @@
 #' @author Lan Luo
 #' @examples
 #' \dontrun{
-#' myefamiivobj_stepN <- stepN_EFAmiiv(data = mydata, stepPrev = crossloadcheckobj)
+#' mymiivefaobj_stepN <- stepN_miivefa(data = mydata, stepPrev = crossloadcheckobj)
 #' }
 #' @keywords internal
 #' @noRd
 #' @export
 
-stepN_EFAmiiv <- function(data,
+stepN_miivefa <- function(data,
                           sigLevel,
                           scalingCrit = 'sargan+factorloading_R2',
                           stepPrev){

@@ -1,4 +1,4 @@
-#' @name EFAmiiv
+#' @name miivefa
 #' @title Exploratory Factor Analysis Using Model Implied Instrumental Variables.
 #' @description This function is the user-level function that conducts EFAmiive.
 #' @usage
@@ -13,20 +13,20 @@
 #' @author Lan Luo
 #' @examples
 #' \dontrun{
-#' myfinalobj <- EFAmiiv(data = mydata, correlatedErrors = 'v3~~v4')
+#' myfinalobj <- miivefa(data = mydata, correlatedErrors = 'v3~~v4')
 #' }
 #' @export
 
 ##final function
-EFAmiiv <- function(data,
+miivefa <- function(data,
                     sigLevel = .05,
                     scalingCrit = "sargan+factorloading_R2",
                     correlatedErrors = NULL){
   ## need to add several sanity checks here later
 
-  temp <- step1_EFAmiiv(data, sigLevel, scalingCrit, correlatedErrors)
+  temp <- step1_miivefa(data, sigLevel, scalingCrit, correlatedErrors)
   while(temp$nextstep == 'yes'){ #while nextstep=yes, create a new factor
-    temp <- stepN_EFAmiiv(data, sigLevel, scalingCrit, stepPrev = temp)
+    temp <- stepN_miivefa(data, sigLevel, scalingCrit, stepPrev = temp)
     if(temp$nextstep == 'yes'){#then check crossloading first
       temp <- crossloadcheck(data, sigLevel, scalingCrit, stepPrev = temp)
     }

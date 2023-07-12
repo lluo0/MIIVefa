@@ -1,9 +1,9 @@
-Package: EFAmiivR
+Package: MIIVefa
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Exploratory Factor Analysis Using Model Implied Instrumental Variables
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
+Author: Lan Luo
+Maintainer: Lan Luo <lanl6277@gmail.com>
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
 License: What license is it under?

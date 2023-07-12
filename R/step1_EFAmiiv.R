@@ -1,8 +1,8 @@
-#' @name step1_EFAmiiv
+#' @name step1_miivefa
 #' @title Exploratory Factor Analysis Using Model Implied Instrumental Variables.
 #' @description This function is the first step of EFAmiie and it runs a one factor model on the provided data.
 #' @usage
-#'step1_EFAmiiv(data='',
+#'step1_miivefa(data='',
 #'                  sigLevel = .05,
 #'                  scalingCrit = "sargan+factorloading_R2",
 #'                  correlatedErrors = NULL = '')
@@ -13,13 +13,13 @@
 #' @author Lan Luo
 #' @examples
 #' \dontrun{
-#' myonefacefamiivobj <- step1_EFAmiiv(data = mydata, correlatedErrors = 'v3~~v4')
+#' myonefacmiivefaobj <- step1_miivefa(data = mydata, correlatedErrors = 'v3~~v4')
 #' }
 #' @keywords internal
 #' @noRd
 #' @export
 
-step1_EFAmiiv <- function(data,
+step1_miivefa <- function(data,
                           sigLevel = .05,
                           scalingCrit = "sargan+factorloading_R2",
                           correlatedErrors = NULL){

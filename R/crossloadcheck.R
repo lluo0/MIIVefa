@@ -9,7 +9,7 @@
 #' @param data The data matrix to be examined.
 #' @param sigLevel The significance level threshold, default is .05.
 #' @param scalingCrit The criterion used to select the scaling indicators, default is 'sargan+factorloading_R2.'
-#' @param stepPrev The output object from the last step from the function stepN_EFAmiiv.
+#' @param stepPrev The output object from the last step from the function stepN_miivefa.
 #' @author Lan Luo
 #' @examples
 #' \dontrun{
