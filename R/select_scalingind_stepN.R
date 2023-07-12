@@ -15,6 +15,7 @@
 #' \dontrun{
 #' myscalingindicator_stepN <- select_scalingind_stepN(data = mydata, stepPrev = crossloadcheckobj)
 #' }
+#' @import MIIVsem
 #' @keywords internal
 #' @noRd
 #' @export

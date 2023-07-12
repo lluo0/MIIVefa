@@ -15,6 +15,9 @@
 #' \dontrun{
 #' myscalingindicator <- select_scalingind(data = mydata, correlatedErrors = 'v3~~v4')
 #' }
+#' @import MIIVsem
+#' @keywords internal
+#' @noRd
 #' @export
 
 

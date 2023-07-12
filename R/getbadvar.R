@@ -11,6 +11,7 @@
 #' \dontrun{
 #' mybadvar <- getbadvar(fit = mydata)
 #' }
+#' @import MIIVsem
 #' @keywords internal
 #' @noRd
 #' @export

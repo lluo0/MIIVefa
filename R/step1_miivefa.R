@@ -15,6 +15,7 @@
 #' \dontrun{
 #' myonefacmiivefaobj <- step1_miivefa(data = mydata, correlatedErrors = 'v3~~v4')
 #' }
+#' @import MIIVsem
 #' @keywords internal
 #' @noRd
 #' @export

@@ -15,6 +15,7 @@
 #' \dontrun{
 #' mymiivefaobj_stepN <- stepN_miivefa(data = mydata, stepPrev = crossloadcheckobj)
 #' }
+#' @import MIIVsem
 #' @keywords internal
 #' @noRd
 #' @export

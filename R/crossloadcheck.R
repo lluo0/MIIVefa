@@ -15,6 +15,7 @@
 #' \dontrun{
 #' crossloadcheckobj <- crossloadcheck(data = mydata, stepPrev = step1)
 #' }
+#' @import MIIVsem
 #' @keywords internal
 #' @noRd
 #' @export

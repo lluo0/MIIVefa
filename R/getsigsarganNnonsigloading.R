@@ -13,6 +13,7 @@
 #' \dontrun{
 #' myproblematicvariables <- getsigsarganNnonsigloading(modellist = mymodellist, fitlist = myfitlist)
 #' }
+#' @import MIIVsem
 #' @keywords internal
 #' @noRd
 #' @export

@@ -15,6 +15,7 @@
 #' \dontrun{
 #' badvarfrommultifit <- getbadvar_multi(fit = mydata, varPerFac = myvarperfac)
 #' }
+#' @import MIIVsem
 #' @keywords internal
 #' @noRd
 #' @export

@@ -10,3 +10,7 @@ License: What license is it under?
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.3
+Depends: 
+    R (>= 4.2.0)
+Imports: 
+    MIIVsem
