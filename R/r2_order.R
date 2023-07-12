@@ -9,6 +9,7 @@
 #' \dontrun{
 #' r2values <- r2_order(data = mydata)
 #' }
+#' @noRd
 #' @export
 
 

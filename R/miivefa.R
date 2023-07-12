@@ -15,7 +15,7 @@
 #' \dontrun{
 #' myfinalobj <- miivefa(data = mydata, correlatedErrors = 'v3~~v4')
 #' }
-#' @export
+#' @export MIIVefa miivefa
 
 ##final function
 miivefa <- function(data,
