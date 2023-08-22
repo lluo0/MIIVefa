@@ -23,10 +23,14 @@ Imports:
 Suggests: 
     knitr,
     rmarkdown,
-    spelling
+    spelling,
+    testthat (>= 3.0.0),
+    mnormt,
+    lavaan
 VignetteBuilder: 
     knitr
 Encoding: UTF-8
 Language: en-US
 LazyData: true
 RoxygenNote: 7.2.3
+Config/testthat/edition: 3

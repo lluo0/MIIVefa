@@ -14,7 +14,6 @@
 #' @import MIIVsem
 #' @keywords internal
 #' @noRd
-#' @export
 
 getbadvar <- function(fit,
                       sigLevel=.05){

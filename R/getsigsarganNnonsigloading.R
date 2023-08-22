@@ -16,7 +16,6 @@
 #' @import MIIVsem
 #' @keywords internal
 #' @noRd
-#' @export
 
 
 ##get the VARIABLE NAME (COLUMN NAME) for significant sargans + non-significant factor loadings

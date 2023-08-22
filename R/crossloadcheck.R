@@ -18,7 +18,6 @@
 #' @import MIIVsem
 #' @keywords internal
 #' @noRd
-#' @export
 
 
 crossloadcheck <- function(data,

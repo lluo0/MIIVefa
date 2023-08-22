@@ -18,7 +18,6 @@
 #' @import MIIVsem
 #' @keywords internal
 #' @noRd
-#' @export
 
 
 select_scalingind_stepN <- function(data,

@@ -18,7 +18,6 @@
 #' @import MIIVsem
 #' @keywords internal
 #' @noRd
-#' @export
 
 step1_miivefa <- function(data,
                           sigLevel = .05,

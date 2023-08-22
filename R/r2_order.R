@@ -11,7 +11,6 @@
 #' r2values <- r2_order(data = mydata)
 #' }
 #' @noRd
-#' @export
 
 
 r2_order <- function(data){

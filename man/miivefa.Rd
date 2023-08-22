@@ -4,10 +4,10 @@
 \alias{miivefa}
 \title{Exploratory Factor Analysis Using Model Implied Instrumental Variables.}
 \usage{
-EFAmiiv(data='',
-                 sigLevel = .05,
-                 scalingCrit = "sargan+factorloading_R2",
-                 correlatedErrors = NULL = '')
+miivefa(data = mydata,
+       sigLevel = .05,
+       scalingCrit = "sargan+factorloading_R2",
+       correlatedErrors = NULL = '')
 }
 \arguments{
 \item{data}{The data matrix.}
@@ -19,7 +19,7 @@ EFAmiiv(data='',
 \item{correlatedErrors}{The pairs of variables whose errors should be correlated in the model search procedure, default is NULL.}
 }
 \description{
-This function is the user-level function that conducts EFAmiive.
+This function is the user-level function that conducts miivefa.
 }
 \examples{
 \dontrun{

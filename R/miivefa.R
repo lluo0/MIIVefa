@@ -1,11 +1,11 @@
 #' @name miivefa
 #' @title Exploratory Factor Analysis Using Model Implied Instrumental Variables.
-#' @description This function is the user-level function that conducts EFAmiive.
+#' @description This function is the user-level function that conducts miivefa.
 #' @usage
-#'EFAmiiv(data='',
-#'                  sigLevel = .05,
-#'                  scalingCrit = "sargan+factorloading_R2",
-#'                  correlatedErrors = NULL = '')
+#'  miivefa(data = mydata,
+#'        sigLevel = .05,
+#'        scalingCrit = "sargan+factorloading_R2",
+#'        correlatedErrors = NULL)
 #' @param data The data matrix.
 #' @param sigLevel The significance level threshold, default is .05.
 #' @param scalingCrit The criterion used to select the scaling indicators, default is 'factorloading_R2.'
