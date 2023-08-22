@@ -49,7 +49,8 @@ crossloadcheck <- function(data,
   crossfit <- tryCatch( miive(model = crossloadmodel, data = data, var.cov = T),
                         error = function(e)
                           return(0)) #0 for error
-  if(class(crossfit)!='miive'){ #aka it is 0, then we retain everything from the previous step and don't test for crossloadings
+  #if(class(crossfit)!='miive'){ #aka it is 0, then we retain everything from the previous step and don't test for crossloadings
+  if(!inherits(crossfit, "miive")){
     finalobj <- stepPrev
   } else {
     #get new badvars after crossloading

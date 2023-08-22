@@ -31,7 +31,7 @@ sim1data <- as.data.frame(sim1data)
 
 #run miivefa
 sim1fit <- miivefa(sim1data,
-                        sigLevel = .05,
+                        sigLevel = .01,
                         scalingCrit = 'sargan+factorloading_R2',
                         correlatedErrors = NULL)
 #if it recovers a 2 factor model
