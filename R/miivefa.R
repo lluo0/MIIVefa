@@ -2,7 +2,7 @@
 #' @title Exploratory Factor Analysis Using Model Implied Instrumental Variables.
 #' @description This function is the user-level function that conducts miivefa.
 #' @usage
-#'  miivefa(data = mydata,
+#'  miivefa(data,
 #'        sigLevel = .05,
 #'        scalingCrit = "sargan+factorloading_R2",
 #'        correlatedErrors = NULL)

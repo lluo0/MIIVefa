@@ -4,10 +4,10 @@
 \alias{miivefa}
 \title{Exploratory Factor Analysis Using Model Implied Instrumental Variables.}
 \usage{
-miivefa(data = mydata,
+miivefa(data,
        sigLevel = .05,
        scalingCrit = "sargan+factorloading_R2",
-       correlatedErrors = NULL = '')
+       correlatedErrors = NULL)
 }
 \arguments{
 \item{data}{The data matrix.}
