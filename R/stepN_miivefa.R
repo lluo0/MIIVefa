@@ -67,7 +67,7 @@ stepN_miivefa <- function(data,
   ###HOW TO BEST HANDLE THIS? RETURN THE MODEL FROM THE PREVIOUS STEP?
   #simply print out the model but not MIIVsem estimate
   #if(class(fit)!='miive'){
-  if(!inherits(crossfit, "miive")){
+  if(!inherits(fit, "miive")){
     #stop('Model is overidentified.')
 
     #if model is overidentified, then retain all badvars on the last factor and stops here.
