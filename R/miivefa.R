@@ -11,11 +11,12 @@
 #' @param scalingCrit The criterion used to select the scaling indicators, default is 'factorloading_R2.'
 #' @param correlatedErrors The pairs of variables whose errors should be correlated in the model search procedure, default is NULL.
 #' @author Lan Luo
+#' @importFrom utils packageVersion
 #' @examples
 #' \dontrun{
 #' myfinalobj <- miivefa(data = mydata, correlatedErrors = 'v3~~v4')
 #' }
-#' @export MIIVefa miivefa
+#' @export
 
 ##final function
 miivefa <- function(data,

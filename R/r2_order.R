@@ -5,6 +5,7 @@
 #'r2_order(data = '')
 #' @param data The data matrix.
 #' @author Lan Luo
+#' @importFrom stats lm na.omit
 #' @examples
 #' \dontrun{
 #' r2values <- r2_order(data = mydata)

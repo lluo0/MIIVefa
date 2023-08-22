@@ -1,10 +1,8 @@
-# EFAmiiv_R
+# MIIVefa
 
-A quick tutotial for using the EFAmiiv package in R.
+A quick tutotial for using the MIIVefa package in R.
 
-EFAmiiv uses MIIVs to perform exploratory factor analysis. 
-
-NOTE: code not package form ready yet, need to manually read in each function first. 
+MIIVefa uses Model Implied Instrumental Variables (MIIVs) to perform Exploratory Factor Analysis (EFA). 
 
 # The Basics
 
