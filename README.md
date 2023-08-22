@@ -6,33 +6,30 @@ MIIVefa uses Model Implied Instrumental Variables (MIIVs) to perform Exploratory
 
 # The Basics
 
-1, Please manually read in all the functions in 'EFAmiiv_R/R/' besides 'for testing.R.' 
+MIIVefa is data-driven algorithm for Exploratory Factor Analysis (EFA) that uses Model Implied Instrumental Variables (MIIVs). The method starts with a one factor model and arrives at a suggested model with enhanced interpretability that allows cross-loadings and correlated errors.
 
-2, The list of all functions (only EFAmiiv is used by users, all the remaining are internal):
+# Running MIIVefa
 
-- r2_order.R: calculate the R2 value of each variable when all other variables are regressed on it. For example, r1 for x1 is calculated as x1 ~ x2 + x3 + x4 + x5 if x1-x5 are all the variables in the data.
+1, Prepare your data.
 
-- getbadvar.R: find 'bad variables' in the initial one factor model, which are defined as having either non-significant factor loading or significant sargan, or both.
+- The input data frame should be in a wide format: columns being different observations and rows being the specific data entries.
 
-- getbadvar_multi.R: find bad variables when multiple factors exist.
+- Column names should be clearly labeled.
 
-- crossloadcheck.R: checks if any bad variable can cross load on any other factor.
+2, Installing MIIVefa.
 
-- getsigsarganNnonsigloading.R: used when selecting scaling indicators, similar to getbadvar_multi but has different output format.
+- In the R console, enter and execute 'install.packages("MIIVefa")' or 'devtools::install_github("https://github.com/lluo0/MIIVefa")' after installing the "devtools" package.
 
-- select_scalingind.R: selects the scaling indicator for the initial one factor model.
+- Load the MIIVefa by executing 'library(MIIVefa)' after installing. 
 
-- select_scalingind_stepN.R: selects the scaling indicator when more than one factor exist.
+3, Running miivefa.
 
-- step1_EFAmiiv.R: creates the first one factor model and evaluates.
+- The only necessarily required input is the raw data matrix.
 
-- stepN_EFAmiiv.R: used to evaluate model fit when multiple factor exists.
+- All 4 arguments are shown below.
 
-- EFAmiiv.R: the function used by users, outputs suggested model and model fit.
+- 'sigLevel' is the significance level with a default of 0.05. 'scalingCrit' is the specified criterion for selecting the scaling indicator whenever a new latent factor is created and the default is 'sargan+factorloading_R2.' And 'CorrelatedErrors' is a vector containing correlated error relations between observed variables with a default of NULL.
 
-3, After reading in all functions, use the 'EFAmiiv' function to perform EFA. sigLevel is the significance level default at .05 and can be specified differently,
-scalingCrit is the criterion(a) used to select the scaling indicator and default is 'sargan+factorloading_R2,' more details documentation can be found in the
-'select_scalingind.R' file.
 
                     EFAmiiv <- function(data,
  
@@ -42,7 +39,14 @@ scalingCrit is the criterion(a) used to select the scaling indicator and default
                     
                     correlatedErrors = NULL)
                     
-             
+# Output of miivefa.
+
+- The output of a miivefa object contains 2 parts:
+
+- 1, a suggested model, of which the syntax is identical to a 'lavaan' model.
+
+- 2, a miivsem model fit of the suggested model. The suggested model is run and evaluated using 'MIIvsem' and all miivsem attributes can be accessed.
+
   
 
   

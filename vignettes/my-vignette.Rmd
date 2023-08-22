@@ -27,7 +27,7 @@ MIIVefa is data-driven algorithm for Exploratory Factor Analysis (EFA) that uses
 
 1, Prepare your data.
 
-- The input dataframe should be in a wide formate: columns being different observations and rows being the specific data entries.
+- The input dataframe should be in a wide format: columns being different observations and rows being the specific data entries.
 
 - Column names should be clearly labeled.
 
