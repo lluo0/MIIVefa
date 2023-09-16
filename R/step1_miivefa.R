@@ -11,10 +11,6 @@
 #' @param scalingCrit The criterion used to select the scaling indicators, default is 'sargan+factorloading_R2.'
 #' @param correlatedErrors The pairs of variables whose errors should be correlated in the model search procedure, default is NULL.
 #' @author Lan Luo
-#' @examples
-#' \dontrun{
-#' myonefacmiivefaobj <- step1_miivefa(data = mydata, correlatedErrors = 'v3~~v4')
-#' }
 #' @import MIIVsem
 #' @keywords internal
 #' @noRd

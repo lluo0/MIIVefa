@@ -39,14 +39,16 @@ MIIVefa is data-driven algorithm for Exploratory Factor Analysis (EFA) that uses
                     
                     correlatedErrors = NULL)
                     
-# Output of miivefa.
+# Output of MIIVefa
 
 - The output of a miivefa object contains 2 parts:
 
-- 1, a suggested model, of which the syntax is identical to a 'lavaan' model.
+- 1, a suggested model, of which the syntax is identical to a 'lavaan' model. Accessible via output$model.
 
-- 2, a miivsem model fit of the suggested model. The suggested model is run and evaluated using 'MIIvsem' and all miivsem attributes can be accessed.
+- 2, a miivsem model fit of the suggested model. The suggested model is run and evaluated using 'MIIvsem' and all miivsem attributes can be accessed. Accessible via output$fit.
+# Examples of MIIVefa
 
+Please refer to the package vignette.
   
 
   

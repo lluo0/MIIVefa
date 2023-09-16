@@ -1,24 +1,66 @@
 #' @name select_scalingind
 #' @title Exploratory Factor Analysis Using Model Implied Instrumental Variables.
-#' @description This function selects the scaling indicator for a one factor model.
+#' @description This function selects a scaling indicator for an initial one factor model given a raw data frame matrix.
 #' @usage
-#'select_scalingind(data='',
+#'select_scalingind(data,
 #'                  sigLevel = .05,
 #'                  scalingCrit = "sargan+factorloading_R2",
-#'                  correlatedErrors = NULL = '')
-#' @param data The data matrix.
+#'                  correlatedErrors = NULL)
+#' @param data A data frame, list or environment or an object coercible by as.data.frame to data frame.
+#' The most common application is to supply a data.frame.
 #' @param sigLevel The significance level threshold, default is .05.
 #' @param scalingCrit The criterion used to select the scaling indicators, default is 'sargan+factorloading_R2.'
 #' @param correlatedErrors The pairs of variables whose errors should be correlated in the model search procedure, default is NULL.
-#' @author Lan Luo
-#' @examples
-#' \dontrun{
-#' myscalingindicator <- select_scalingind(data = mydata, correlatedErrors = 'v3~~v4')
-#' }
 #' @import MIIVsem
-#' @keywords internal
-#' @noRd
+#' @details
+#' \itemize{
+#' \item{\code{All possible criteria for scalingCrit}}{
+#'
+#' order: uses the first appearing variable as the scaling indicator
+#'
+#' sargan: uses the variable with the least number of significant sargans as the scaling indicator.
+#' if multiple variables have the same least number of significant sargans, chooses the first appearing variable.
+#'
+#' R2: uses the variable with the highest R2 as the scaling indicator.
+#' if multiple variables have the same R2 value, chooses the first appearing variable.
+#'
+#' factor loading: uses the variable with the most number of significant factor loadings as the scaling indicator.
+#' if multiple variables have the same most number of significant factor loadings, chooses the first appearing variable.
+#'
+#' sargan_R2: uses the variable with the least number of significant sargans as the scaling indicator.
+#' if multiple variables have the same least number of significant sargans, chooses the one with higher R2.
+#' if still multiple options, chooses the first appearing variable.
+#'
+#' sargan_factorloading: uses the variable with the least number of significant sargans as the scaling indicator.
+#' if multiple variables have the same least number of significant sargans, chooses the one with more significant factor loadings.
+#' if still multiple options, chooses the first appearing variable.
+#'
+#' sargan_factorloading_R2: uses the variable with the least number of significant sargans as the scaling indicator.
+#' if multiple variables have the same least number of significant sargans, chooses the one with more significant factor loadings.
+#' if still multiple options, chooses the one with higher R2.
+#'
+#' factorloading_R2: uses the variable with the most number of significant factor loadings as the scaling indicator.
+#' if multiple variables have the same nist number of significant factor loadings, chooses the one with higher R2.
+#' if still multiple options, chooses the first appearing variable.
+#'
+#' factorloading_sargan: uses the variable with the most number of significant factor loadings as the scaling indicator.
+#' if multiple variables have the same nist number of significant factor loadings, chooses the one with less significant sargans.
+#' if still multiple options, chooses the first appearing variable.
+#'
+#' factorloading_sargan_R2: uses the variable with the most number of significant factor loadings as the scaling indicator.
+#' if multiple variables have the same nist number of significant factor loadings, chooses the one with less significant sargans.
+#' if still multiple options, chooses the one with higher R2.
+#'
+#' sargan+factorloading: uses the variable with the least sum of significant sargans and non-signficant factor loadings.
+#' if multiple variables have the same least sum of significnat sargans and non-significant factor loadings, chooses the first appearing variable.
+#'
+#' sargan+factorloading_R2: uses the variable with the least sum of significant sargans and non-signficant factor loadings.
+#' if multiple variables have the same least sum of significnat sargans and non-significant factor loadings, chooses the one with higher R2.
 
+#' }
+#' }
+#' @return A vector indicating the variable (column name) that is suggested to be the scaling indicator for the initial one factor model.
+#' @export
 
 #########scaling indicator selection########
 #scaling indicator selection criterion

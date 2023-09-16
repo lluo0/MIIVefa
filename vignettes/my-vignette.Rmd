@@ -1,12 +1,14 @@
 ---
-title: "Package 'MIIVefa'"
+title: "MIIVefa and usage examples"
 output: rmarkdown::html_vignette
 author: Lan Luo
 vignette: >
-  %\VignetteIndexEntry{Package 'MIIVefa'}
+  %\VignetteIndexEntry{MIIVefa and usage examples}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+
 ---
+
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
@@ -17,7 +19,10 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(MIIVefa)
+library(mnormt)
 ```
+
+# Setting up MIIVefa
 
 ## The Basics
 
@@ -58,8 +63,220 @@ miivefa(
 
 - The output of a miivefa object contains 2 parts:
 
-- 1, a suggested model, of which the syntax is identical to a 'lavaan' model.
+- 1, a suggested model, of which the syntax is identical to a 'lavaan' model. Accessible via output$model.
 
-- 2, a miivsem model fit of the suggested model. The suggested model is run and evaluated using 'MIIvsem' and all miivsem attributes can be accessed.
+- 2, a miivsem model fit of the suggested model. The suggested model is run and evaluated using 'MIIvsem' and all miivsem attributes can be accessed. Accessible via output$fit.
 
+# Simulation Examples
 
+We now demonstrate the usage and performance of MIIVefa across different conditions using three simulations and three empirical examples.
+
+## Simulation 1: Identifying crossloadings
+
+We first demonstrate the ability of MIIVefa to recover the true DGM even for complicated data structures. The simulation example consists of a total of 20 observed variables on 4 latent factors. While each factor contains 5 primary variables that load on each, there are two variables (x15 and x20) that also crossload on two factors. The code to generate this simulation example is:
+
+```{r sim1a}
+seed <- 1235
+#generate latent factor values
+eta <- rmnorm(n=500, 
+              mean = c(0,0,0,0), 
+              varcov = matrix(c(1,.5, .5, .5,
+                                .5,1, .5, .5,
+                                .5, .5,1, .5,
+                                .5, .5, .5,1), nrow = 4))
+#generate errors
+seed <- 1235
+e <- rmnorm(n=500,
+            varcov =  diag(.25, nrow = 20))
+lambda <- cbind(c(1, .8, .75, .7, .65, rep(0,9), .4, rep(0,5)),
+                c(rep(0,5), 1, .8, .75, .7, .65, rep(0,9), .3),
+                c(rep(0,10), 1, .8, .75, .7, .65, rep(0,5)),
+                c(rep(0,15),  1, .8, .75, .7, .65))
+
+rep <- 500
+#obtain observed variable values
+sim1 <- eta %*% t(lambda) + e
+#create column names
+colnames(sim1) <- paste0("x", 1:ncol(sim1))
+#make it a data frame
+sim1 <- as.data.frame(sim1)
+```
+
+And we run MIIVefa opting for a significance level of .01.
+```{r sim1b}
+miivefa(sim1, .01)
+```
+We can see that MIIVefa was able to recover the exact data structure in the DGM, including the two crossloading variables x15 and x20. One of the main differences between the output and that from most other EFA approaches is the simplicity of the final model. Because only relevant factor loadings are included in the final model, it does not require additional subjective factor loading trimming for interpretation. 
+
+## Simulation 2: allowing the inclusion of correlated errors
+
+One of the advantages of MIIVefa over traditional EFA is that it allows the specification of correlated errors in the model search procedure. For example, if we had measures of the same question across different time points, we can allow for their errors to correlate. We use a simple 2 factor 8 variable model with only one variable (x8) cross-loading on both factors, except now x1-4 have correlated errors with their corresponding errors of the same measures x5-x8 at the second point in time. The code to generate this simulation is as follows:
+
+```{r sim2a}
+seed <- 1234 #for replication purpose
+#generate latent factor values
+eta <- rmnorm(n=500, 
+              mean = c(0,0), 
+              varcov = matrix(c(1,.5,
+                                .5,1), nrow = 2))
+#generate errors
+seed <- 1234 
+CE <- 0.15
+e <- rmnorm(n=500,
+            mean = rep(0,8),
+            varcov =  matrix(rbind(c(.25, 0, 0, 0, CE, 0, 0, 0),
+                                   c(0, .25, 0, 0, 0, CE, 0, 0),
+                                   c(0, 0, .25, 0, 0, 0, CE, 0),
+                                   c(0, 0, 0, .25, 0, 0, 0, CE),
+                                   c(CE, 0, 0, 0, .25, 0, 0, 0),
+                                   c(0, CE, 0, 0, 0, .25, 0, 0),
+                                   c(0, 0, CE, 0, 0, 0, .25, 0),
+                                   c(0, 0, 0, CE, 0, 0, 0, .25)), nrow=8, ncol=8))
+#factor loading matrix
+lambda <- matrix(c(1,0,
+                   .8,0,
+                   .7,0,
+                   .6,0,
+                   0,1,
+                   0,.8,
+                   0,.7,
+                   .4,.6), nrow = 8, byrow = T)
+#obtain observed variable values
+sim2 <- eta %*% t(lambda) + e
+#create column names
+colnames(sim2) <- paste0("x", 1:ncol(sim2))
+#make it a data frame
+sim2 <- as.data.frame(sim2)
+```
+
+Again, because this example just adds correlated errors between observed variables to the workflow example, the only difference in the code is the variance-covariance matrix for observed variable errors. The code and the recovered model when running MIIVefa omitting these correlated errors is as follows:
+
+```{r sim2b, warning=F}
+miivefa(sim2, .01) 
+```
+
+A 8 factor model that each variable was loaded on its own factor was recovered, which is very different from the true DGM. Because no common factor was found among any of the factors, a warning message that `No latent variables found.' was reported. However, if we knew that variables x1 to x4 and x5 to x8 were actually the same measures taken from the same people at different time points, we would have indicated that in the model search procedure, and the code and recovered factor loadings are as follows:
+    
+
+```{r sim2c}
+miivefa(sim2, .01,
+    correlatedErrors = 'x1~~x5
+        x2~~x6
+        x3~~x7
+        x4~~x8') 
+```
+After including the pairs of correlated errors in the model search procedure, MIIVefa was able to recover the true DGM correctly, even including the crossloading of x8 on both factors.
+
+## Simulation 3: identifying unrelated variables
+
+A third example is similar to Simulation 2. The correlated errors between variables are excluded but two additional extra variables that do not load on any factors in the true DGM are now included. They are included to demonstrate the capability of the algorithm to differentiate them from the rest of the variables. The data are generated as:
+
+```{r sim3a}
+seed <- 1237 #for replication purpose
+#generate latent factor values
+eta <- rmnorm(n=500, 
+              mean = c(0,0), 
+              varcov = matrix(c(1,.5,
+                                .5,1), nrow = 2))
+#generate residuals
+seed <- 1237
+e <- rmnorm(n=500,
+            varcov =  diag(.25, nrow = 10))
+#factor loading matrix
+lambda <- matrix(c(1,0,
+                   .8,0,
+                   .7,0,
+                   .6,0,
+                   0,1,
+                   0,.8,
+                   0,.7,
+                   .4,.6,
+                   0,0,
+                   0,0), nrow = 10, byrow = T)
+#obtain observed variable values
+sim3 <- eta %*% t(lambda) + e
+#create column names
+colnames(sim3) <- paste0("x", 1:ncol(sim3))
+#make it a data frame
+sim3 <- as.data.frame(sim3)
+```
+
+The zero factor loadings are represented by  the zeros in the Lambda matrix. The code to run MIIVefa} and the output are as follows:
+
+```{r sim3b, warning=F}
+miivefa(sim3, .01)
+```
+From the output we can see that the true DGM for x1 to x8 was still correctly recovered, and the algorithm was able to put aside the two solitary variables, x9 and x10, on two separate factors. This example demonstrates the ability of MIIVefa to not only detect solitary variables, but to also still correctly recover the true DGM in the presence of those solitary variables.
+
+# Empirical Examples
+
+## Empirical example 1:
+
+The first empirical example comes from Holzinger and Swineford (1937), which contains mental ability test scores of seventh- and eighth- grade children from two schools. The original dataset has a total of 26 test scores but a subset of 9 test scores is more widely known in the literature and it is usually used to demonstrate the usage and performance of CFA. We used this 9 test score subset available in lavaan (Rosseel, 2012).
+
+```{r emp1a}
+library(lavaan)
+holzingerdata <- lavaan::HolzingerSwineford1939[,7:15]
+head(holzingerdata)
+```
+The 9 test scores in this empirical example (N=301) are scores for tests on: visual perception (X1), cubes (X2), lozenges (X3), paragraph comprehension (X4), sentence completion (X5), word meaning (X6), speeded addition (X7), speeded counting of dots (X8), and speeded discrimination on straight and curved capitals (X9). The widely used CFA model for it is a hypothesized 3 factor model of mental abilities on visual, textual, and speed tasks. MIIVefa recovered an almost identical model to the hypothesized 3 factor model, with the only difference being it also recovered one crossloading: speeded discrimination on straight and curved capitals on both the speed the visual factor. The code to run MIIVefa and the output containing both the recovered model and parameter estimates are as follow:
+
+```{r emp1b}
+miivefa(holzingerdata, sigLevel = .01, 'sargan+factorloading_R2')
+```
+
+MIIVefa recovered the general three factor structure. The crossloading of the speeded discrimination on straight and curved capitals task for both speed and visual ability was an interesting but not surprising recovery, as it is indeed a test that involves both mental abilities of differentiating between distinct types of capitals visually and being able to do so quickly.
+
+## Empirical example 2
+
+The second empirical example comes from Bergh et al. (2016) and it consists items measuring openness, agreeableness, and prejudice against minorities. The dataset is available in the R package MPsychoR (Mair, 2020) and we used a subset of it excluding
+demographics.
+
+The 10 items in this example (N=861) are 3 agreeableness indicators (A1-A3), 3 openness indicators (O1-O3), and 4 prejudice indicators: ethnic prejudice (EP), sexism (SP), sexual prejudice against gays and lesbians (HP), and  prejudice against people with mentally disabilities (DP). The four prejudice items were hypothesized as indicators to the generalized prejudice (GP) factor   (Bergh et al., 2016). This dataset was also used in Mair (2018, p.49-52) to demonstrate multilevel CFA on the generalized prejudice factor. Here we included all 10 variables to run MIIVefa. The code and output are as follows:
+
+```{r emp2a}
+library(MPsychoR)
+data("Bergh")
+miivefa(Bergh[,1:10], .01, 'sargan+factorloading_R2') 
+```
+
+MIIVefa recovered a 3 factor model that generally separated openness, agreeable, and generalized prejudice. It also recovered two crossloadings. The first one is HP being crossloaded negatively on the openness factor. The other prejudice indicators, however, loaded solely on the GP factor. This crossloading detection suggested that although being more open appeared to be associated with a lower level of prejudice against people with minority sexual orientations, openness was not necessarily related to a lower level of other types prejudice. This could have meaningful empirical implications such as that the other types of prejudice are likely complicated by other factors. The second crossloading is the second agreeableness indicator being crossloaded negatively on the GP factor. This indicated that this agreeableness indicators is closely related to the GP factor. However, the specific questions/items for the agreeableness and openness indicators were not provided. 
+
+## Empirical example 3
+
+The third empirical example is taken from Sidanius and Pratto (2001) which measures Social Dominance Orientation (SDO) across five years. The dataset is again available in the R package MPsychoR (Mair, 2020) and we used a subset of it of items
+from only two years. The subset (N =612) contains a total of 8 variables, which are consisted of 4 items taken from year 1996 and 2000: ‘It’s probably a good thing that certain groups are at the top and other groups are at the bottom’ (I1), ‘Inferior groups should stay in their place’ (I2), ‘We should do what we can to equalize conditions for different groups (reversed)’ (I3), and ‘Increased social equality is beneficial to society (reversed)’ (I4). The code and recovered model are as follows when we first omit the correlations between the same items taken at different years:
+
+```{r emp3a, warning=F}
+data("SDOwave")
+sdowavedata <- SDOwave[,
+c(paste0(c('I1.','I2.','I3.','I4.'), 1996), 
+paste0(c('I1.','I2.','I3.','I4.'), 2000))]
+miivefa(sdowavedata, .01)
+```
+
+We can see that the final recovered 7 factor model was hard to interpret, similar to what we see in Simulation 2 where most variables were placed in their own latent factors. However, after we included the four pairs of correlated errors, the recovered model was very different. The code and MIIVefa output are as follows:
+```{r emp3b, warning=F}
+miivefa(sdowavedata, .01, 
+        correlatedErrors =
+        'I1.1996~~I1.2000
+        I2.1996~~I2.2000
+        I3.1996~~I3.2000
+        I4.1996~~I4.2000')
+```
+
+Now the recovered model became a four factor model that not only separated the same items from different years into different factors, but also separated I1, I2 and I3, I4. This is an interesting recovery, because I3 and I4 are actually reversed coded items. This could potentially imply that not wanting to actively get involved to increase social equality does NOT necessarily equal to wanting to assert social dominance. 
+
+# References
+
+- Bergh, R., Akrami, N., Sidanius, J., & Sibley, C. G. (2016). Is group membership necessary for understanding generalized prejudice? a re-evaluation of why prejudices are interrelated. Journal of personality and social psychology, 111 (3), 367.
+
+- Holzinger, K. J., & Swineford, F. (1937). The bi-factor method. Psychometrika, 2 (1), 41–54.
+
+- Mair, P. (2018). Modern psychometrics with r. Springer.
+
+- Mair, P. (2020). Mpsychor: Modern psychometrics with r [R package version 0.10-8]. https://cran.r-project.org/package=MPsychoR
+
+- Rosseel, Y. (2012). Lavaan: An r package for structural equation modeling. Journal of statistical software, 48, 1–36.
+ 
+- Sidanius, J., & Pratto, F. (2001). Social dominance: An intergroup theory of social hierarchy and oppression. Cambridge University Press

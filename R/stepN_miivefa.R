@@ -11,10 +11,7 @@
 #' @param scalingCrit The criterion used to select the scaling indicators, default is 'sargan+factorloading_R2.'
 #' @param stepPrev The output object from the last step from the function crossloadcheck.
 #' @author Lan Luo
-#' @examples
-#' \dontrun{
-#' mymiivefaobj_stepN <- stepN_miivefa(data = mydata, stepPrev = crossloadcheckobj)
-#' }
+#' @import MIIVsem
 #' @keywords internal
 #' @noRd
 
@@ -79,8 +76,7 @@ stepN_miivefa <- function(data,
     # model <- paste0(modelpart, collapse = '\n')
     # fit <- miive(model, data, var.cov = T)
 
-    cat('No latent variables found.')
-    cat('\n')
+    message('No latent variables found. \n')
     #warning('No latent variables found.')
     finalobj <- list(model = model,
                      nextstep = 'no')

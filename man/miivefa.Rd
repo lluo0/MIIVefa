@@ -10,22 +10,21 @@ miivefa(data,
        correlatedErrors = NULL)
 }
 \arguments{
-\item{data}{The data matrix.}
+\item{data}{A data frame, list or environment or an object coercible by as.data.frame to data frame.
+The most common application is to supply a data.frame.}
 
 \item{sigLevel}{The significance level threshold, default is .05.}
 
-\item{scalingCrit}{The criterion used to select the scaling indicators, default is 'factorloading_R2.'}
+\item{scalingCrit}{The criterion used to select the scaling indicators, default is 'factorloading_R2.'
+More details see \code{\link{select_scalingind}}}
 
 \item{correlatedErrors}{The pairs of variables whose errors should be correlated in the model search procedure, default is NULL.}
 }
+\value{
+A miivefa object containing a vector of the recovered model syntax, and a miivsem object of model fit of the recovered model when applicable.
+The recovered model syntax and miivsem fit object can be accessed using output$model and output$fit.
+The output$model miivsem object contains both parameter estimation and model fit information.
+}
 \description{
 This function is the user-level function that conducts miivefa.
-}
-\examples{
-\dontrun{
-myfinalobj <- miivefa(data = mydata, correlatedErrors = 'v3~~v4')
-}
-}
-\author{
-Lan Luo
 }
