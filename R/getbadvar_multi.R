@@ -40,7 +40,7 @@ getbadvar_multi <- function(fit,
   #the bad var with significant sargans.
   newbadvar_sargan <- vector()
   for (p in 1:length(fit$eqn)){
-    if (fit$eqn[[p]]$sargan.p < sigLevel){
+    if (fit$eqn[[p]]$sargan.p < sigLevel | is.na(fit$eqn[[p]]$sargan.p)){ #updated 11.11.2023: when model too complicated MIIVsem has object 'sample.sscp' not found error.
       newbadvar_sargan <- append(newbadvar_sargan,fit$eqn[[p]]$DVobs)
     }
   }
