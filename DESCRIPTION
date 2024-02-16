@@ -1,8 +1,8 @@
 Type: Package
 Package: MIIVefa
 Title: Exploratory Factor Analysis Using Model Implied Instrumental Variables
-Version: 0.1.1
-Date: 2023-09-16
+Version: 0.1.2
+Date: 2024-02-14
 Authors@R: c(person("Lan", "Luo", role = c("aut", "cre"),
                      email = "lanl27@live.unc.edu"),
                      person("Kathleen", "Gates", role = "aut"),
