@@ -13,7 +13,7 @@
 #' @param correlatedErrors The pairs of variables whose errors should be correlated in the model search procedure, default is NULL.
 #' @import MIIVsem
 #' @details
-#' \itemize{
+#' \describe{
 #' \item{\code{All possible criteria for scalingCrit}}{
 #'
 #' order: uses the first appearing variable as the scaling indicator

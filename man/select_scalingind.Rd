@@ -26,7 +26,7 @@ A vector indicating the variable (column name) that is suggested to be the scali
 This function selects a scaling indicator for an initial one factor model given a raw data frame matrix.
 }
 \details{
-\itemize{
+\describe{
 \item{\code{All possible criteria for scalingCrit}}{
 
 order: uses the first appearing variable as the scaling indicator
