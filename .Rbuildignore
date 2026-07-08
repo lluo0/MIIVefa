@@ -1,6 +1,10 @@
-^renv$
-^renv\.lock$
 ^.*\.Rproj$
 ^\.Rproj\.user$
-^LICENSE\.md$
-^revdep$
+^\.Rprofile$
+^renv$
+^renv/.*$
+^renv\.lock$
+^\.git$
+^\.gitignore$
+^MIIVefa\.Rcheck$
+^MIIVefa_.*\.tar\.gz$
